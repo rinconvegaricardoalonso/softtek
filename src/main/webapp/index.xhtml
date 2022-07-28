@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://xmlns.jcp.org/jsf/core">	
+<h:head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" http-equiv="X-UA-Conpatible" />    
+    <title>Proveedores</title>
+</h:head>
+<h:body>
+	<h2>
+    	<h:outputText value="Lista de Proveedores"></h:outputText>
+    </h2>
+    <h:form>
+    	<h:panelGrid columns="5" cellspacing="10">
+    		<h:outputText value="Busca proveedores por identificación o nombre"></h:outputText>
+			<h:inputText value="#{proveedorBean.condicion}"></h:inputText>
+			<h:commandButton action="#{proveedorBean.buscarProveedores()}" value="Buscar"></h:commandButton>
+			<h:commandButton action="#{proveedorBean.redireccionCrear()}" value="Crear"></h:commandButton>
+			<h:commandButton action="#{proveedorBean.limpiar()}" value="Limpiar"></h:commandButton>
+    	</h:panelGrid>
+    	
+    	<br></br>
+    	
+	    <h:dataTable value="#{proveedorBean.proveedores}" var="proveedor">
+	    	<h:column>
+	    		<f:facet name="header">Nombre</f:facet>
+	    		<h:outputText value="#{proveedor.nombre}"></h:outputText>
+	    	</h:column>
+	    	<h:column>
+	    		<f:facet name="header">Identificacion</f:facet>
+	    		<h:outputText value="#{proveedor.identificacion}"></h:outputText>
+	    	</h:column>
+	    	<h:column>
+	    		<f:facet name="header">Direccion</f:facet>
+	    		<h:outputText value="#{proveedor.direccion}"></h:outputText>
+	    	</h:column>
+	    	<h:column>
+	    		<f:facet name="header">Correo</f:facet>
+	    		<h:outputText value="#{proveedor.correo}"></h:outputText>
+	    	</h:column>
+	    	<h:column>
+	    		<f:facet name="header">Disponibilidad</f:facet>
+	    		<h:outputText value="#{proveedor.disponibilidad}"></h:outputText>
+	    	</h:column>
+	    	<h:column>
+	    		<f:facet name="header">Acción</f:facet>
+	    		<h:panelGrid columns="2" cellspacing="10">
+	    			<h:commandButton action="#{proveedorBean.redireccionEditar(proveedor)}" value="Editar"></h:commandButton>
+	    			<h:commandButton action="#{proveedorBean.eliminar(proveedor.idproveedor)}" value="Eliminar"></h:commandButton>
+	    		</h:panelGrid>
+	    	</h:column>
+	    </h:dataTable>
+    </h:form>
+</h:body>
+</html>
