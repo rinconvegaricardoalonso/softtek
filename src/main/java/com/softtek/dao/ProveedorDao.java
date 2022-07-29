@@ -36,6 +36,14 @@ public class ProveedorDao {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public ProveedorEntity findByIdentificacion(String identificacion) {
+		Query query = entity.createQuery("SELECT p FROM ProveedorEntity p "
+										+ "where p.identificacion = '" + identificacion + "' ");
+		ProveedorEntity proveedor = (ProveedorEntity) query.getSingleResult();
+		return proveedor;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<ProveedorEntity> findAll() {
 		Query uery = entity.createQuery("SELECT P FROM ProveedorEntity P");
 		List<ProveedorEntity> proveedorLis = uery.getResultList();

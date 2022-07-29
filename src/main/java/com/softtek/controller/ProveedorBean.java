@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -78,13 +79,50 @@ public class ProveedorBean {
 		System.out.println("se oprime botón de Crear/Actualizar proveedor");
 		System.out.println(proveedor);
 		
-		if (proveedor.getIdproveedor() == null) proveedorDao.save(proveedor);
-		else proveedorDao.update(proveedor);
+		if(!validarCampos(proveedor)) {
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.addMessage(null, new FacesMessage("Por favor diligencie todos los campos"));
+			return "";
+		}
+		
+		if (proveedor.getIdproveedor() == null) {
+			ProveedorEntity proveedorAux = proveedorDao.findByIdentificacion(proveedor.getIdentificacion());
+			
+			if (proveedorAux != null) {
+				FacesContext context = FacesContext.getCurrentInstance();
+				context.addMessage(null, new FacesMessage("Ya existe un proveedor con la identificación " + proveedorAux.getIdentificacion()));
+				return "";
+			}
+			
+			proveedorDao.save(proveedor);
+		} else {
+			ProveedorEntity proveedorAux = proveedorDao.findByIdentificacion(proveedor.getIdentificacion());
+			
+			if (proveedorAux != null && !proveedorAux.getIdproveedor().equals(proveedor.getIdproveedor())) {
+				FacesContext context = FacesContext.getCurrentInstance();
+				context.addMessage(null, new FacesMessage("Ya existe otro proveedor con la identificación " + proveedorAux.getIdentificacion()));
+				return "";
+			}
+			
+			proveedorDao.update(proveedor);
+		}
 		
 		condicion = proveedor.getIdentificacion();
 		buscarProveedores();
 		
 		return "/faces/index.xhtml";
+	}
+	
+	private Boolean validarCampos(ProveedorEntity proveedor) {
+		if(proveedor.getNombre() == null || proveedor.getNombre().trim().isEmpty() ||
+			proveedor.getIdentificacion() == null || proveedor.getIdentificacion().trim().isEmpty() ||
+			proveedor.getDireccion() == null || proveedor.getDireccion().trim().isEmpty() ||
+			proveedor.getCorreo() == null || proveedor.getCorreo().trim().isEmpty() ||
+			proveedor.getDisponibilidad() == null) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public String eliminar(Long idproveedor) {
